@@ -1,32 +1,68 @@
 
 import React, { Component } from 'react';
 import axios from 'axios';
-const API_KEY = 'YOURAPIKEYHERE';
-let gapi;
+const API_KEY = 'AIzaSyB90iK4dG7R-3DU1jJ_ZMvNxomsiUw3Zwc';
+
 export class SearchForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            gapiReady: false,
+            gapi: null,
+            res: null
+        }
+        this.loadgapi = this.loadgapi.bind(this);
+        this.readRes = this.readRes.bind(this);
+        this.searchByAddress = this.searchByAddress.bind(this);
+    }
 
-    loadYoutubeApi() {
-    const script = document.createElement("script");
-    script.src = "https://apis.google.com/js/client.js";
+    loadgapi() {
+        const script = document.createElement("script");
+        script.src = "https://apis.google.com/js/client.js";
 
-    script.onload = () => {
-        gapi = window.gapi;
-      gapi.load('client', () => {
-        gapi.client.setApiKey(API_KEY);
-        gapi.client.load('youtube', 'v3', () => {
-          this.setState({ gapiReady: true });
+        script.onload = () => {
+            let gapi = window.gapi;
+            gapi.load('client', () => {
+            gapi.client.setApiKey(API_KEY);
+
+            this.setState({
+                gapiReady: true,
+                gapi: gapi
+            });
+            this.searchByAddress("360 Grassy Hill Road", this.readRes);
+          });
+        };
+
+        document.body.appendChild(script);
+    }
+    readRes(res, raw) {
+        console.log(res);
+        this.setState({
+            res: res
         });
-      });
-    };
+    }
+    searchByAddress(address, callback) {
+        let gapi = this.state.gapi;
+        let req = gapi.client.request({
+           'path' : '/civicinfo/v2/representatives',
+           'params' : {'address' : address}
+        });
+        req.execute(this.readRes);
+    }
 
-    document.body.appendChild(script);
-  }
+    componentDidMount() {
+        this.loadgapi();
 
-  componentDidMount() {
-    this.loadYoutubeApi();
+    }
+    get data() {
+        if (!this.state.res)
+            return "none";
+        let data = this.state.res;
+        return data.map(item => {
+            return <div>item.toString()</div>;
+        })
     }
     render() {
-        // axios.get('https://www.googleapis.com/civicinfo/v2/representatives?query=360%20Grassy%20Hill%20Road').then( res => console.log(res));
         return (
             <div>
                 <h1>Hello</h1>
