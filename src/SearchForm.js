@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
-import axios from 'axios';
-const API_KEY = 'AIzaSyB90iK4dG7R-3DU1jJ_ZMvNxomsiUw3Zwc';
+import cred from "./config";
+const API_KEY = cred.key;
 
 export class SearchForm extends Component {
     constructor(props) {
