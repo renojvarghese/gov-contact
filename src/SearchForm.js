@@ -29,7 +29,7 @@ export class SearchForm extends Component {
                 gapiReady: true,
                 gapi: gapi
             });
-            this.searchByAddress("360 Grassy Hill Road", this.readRes);
+            this.searchByAddress("", this.readRes);
           });
         };
 
